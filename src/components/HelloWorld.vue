@@ -26,6 +26,8 @@
 </template>
 
 <script>
+  import axios from 'axios'
+  // import echarts from 'echarts'
   export default {
     name: 'HelloWorld',
     data() {
@@ -70,6 +72,10 @@
         checkedButton: 0,
       }
     },
+    mounted(){
+      this.getButtonData()
+
+    },
     methods:{
       // 点击切换按钮
       checkButton:(item,index)=>{
@@ -77,7 +83,22 @@
         this.checkedButton = index
       },
 
-      // 切换图表
+      // 获取图表数据的接口
+      getEchartsData:()=>{
+
+      },
+
+      // 获取按钮数据的接口
+      getButtonData:()=>{
+        axios.get('/api/device/get_latest_data', {
+          params: {
+            id:504626770
+          },
+          withCredentials: false
+        }).then((res)=>{
+          console.log(res.data.data)
+        })
+      }
     }
   }
 </script>
