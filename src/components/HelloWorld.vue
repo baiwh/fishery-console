@@ -3,9 +3,7 @@
 
     <div class="echarts-box">
       <img class="echarts-img" src="./../../static/left.png" alt="">
-      <div class="echarts-window">
-
-      </div>
+      <div class="echarts-window" id="box"></div>
       <img class="echarts-img" src="./../../static/right.png" alt="">
     </div>
 
@@ -27,7 +25,8 @@
 
 <script>
   import axios from 'axios'
-  // import echarts from 'echarts'
+  import echarts from 'echarts'
+
   export default {
     name: 'HelloWorld',
     data() {
@@ -74,6 +73,7 @@
     },
     mounted() {
       this.getButtonData()
+      this.getEchartsData('airTemperature')
     },
     methods: {
       // 点击切换按钮
@@ -116,6 +116,130 @@
         }).then((res) => {
           console.log(res.data.data)
           let data = res.data.data
+
+          var myChart = echarts.init(document.getElementById("box"));
+          var option = {
+            // 标题
+            title: {
+              text: this.buttonData[this.checkedButton].title,
+              textStyle: {
+                color: '#ffffff',
+                fontWeight: 200,
+                align: 'center'
+              },
+              left: '46%',
+              top: '5%'
+            },
+            tooltip: {
+              trigger: 'axis',
+              backgroundColor: '#1b60ff',
+              formatter: '{c}',
+            },
+            grid: {
+              left: '6%',   //图表距边框的距离
+              right: '7%',
+              bottom: '8%',
+              top: '20%',
+              containLabel: true
+            },
+            xAxis: {
+              type: 'category',
+              boundaryGap: false,
+              data: data.time,
+              axisLine: {
+                lineStyle: {
+                  color: '#223873'
+                }
+              },
+              axisTick: {
+                show: false
+              },
+              axisLabel: {
+                color: '#a5aabc',
+                // showMinLabel:true,
+                // showMaxLabel:true
+                // rotate:30,
+                // interval:0
+              },
+            },
+            yAxis: {
+              type: 'value',
+              name: '('+this.buttonData[this.checkedButton].unit+')',
+              nameGap:20,
+              nameTextStyle:{
+                color: '#a5aabc',
+                left:30
+              },
+              axisLabel: {
+                color: '#a5aabc',
+                margin: 21
+              },
+              axisLine: {
+                show: false
+              },
+              axisTick: {
+                show: false
+              },
+              splitLine: {
+                show: true,
+                lineStyle: {
+                  color: '#223873'
+                }
+              }
+            },
+            series: [
+              {
+                name: '%',
+                type: 'line',
+                symbol: 'circle',
+                // symbol:'image://https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1544613091539&di=c6038785b2b181f9f7f6978876b6e60c&imgtype=0&src=http%3A%2F%2Fimg.lagou.com%2Fthumbnail_600x360%2Fi%2Fimage%2FM00%2F5A%2F64%2FCgqKkVfeMw2ATionAAB5Qpweo2w150.PNG',
+                symbolSize: 4,
+                areaStyle: {
+                  normal: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                      offset: 0,
+                      color: '#065f87'
+                    }, {
+                      offset: 1,
+                      color: '#092263'
+                    }])
+                  }
+                },
+                markLine: {
+                  symbol: '',
+                  itemStyle: {
+                    lineStyle: {type: 'solid'},
+                    label: {show: true, position: 'left', formatter: 'aaa'}
+                  },
+                  data: [
+                    { yAxis: 26,
+                      label: {
+                        show: true,
+                        formatter: '26',
+                        color: '#ff4242'
+                      },
+                      itemStyle: {
+                        color: '#853352'
+                      }
+                    }
+                  ]
+                },
+                itemStyle: {
+                  normal: {
+                    // color: '#01132f',
+                    color: '#00ffff',
+                    borderColor: '#00ffff'
+                  }
+                },
+                lineStyle: {
+                  color: '#00ffff'
+                },
+                data: data.data
+              }
+            ]
+          };
+
+          myChart.setOption(option);
         })
       },
 
