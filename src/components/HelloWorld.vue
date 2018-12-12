@@ -35,68 +35,107 @@
         buttonData: [
           {
             title: '环境温度',
-            data: 30,
+            data: 0,
             unit: '℃'
           },
           {
             title: '环境湿度',
-            data: 70.8,
+            data: 0,
             unit: '%'
           },
           {
             title: 'CO₂',
-            data: 18,
+            data: 0,
             unit: '%'
           },
           {
             title: '光照强度',
-            data: 5678,
+            data: 0,
             unit: 'lux'
           },
           {
             title: '土壤温度',
-            data: 24.3,
+            data: 0,
             unit: '℃'
           },
           {
             title: '土壤湿度',
-            data: 79.4,
+            data: 0,
             unit: '%'
           },
           {
             title: '土壤PH',
-            data: 7.4,
+            data: 0,
             unit: ''
           }
         ],
         checkedButton: 0,
       }
     },
-    mounted(){
+    mounted() {
       this.getButtonData()
-
     },
-    methods:{
+    methods: {
       // 点击切换按钮
-      checkButton:(item,index)=>{
-        console.log(item,index)
+      checkButton: function (item, index) {
+        console.log(item, index)
         this.checkedButton = index
+        switch (index) {
+          case 0 :
+            this.getEchartsData('airTemperature')
+            break
+          case 1 :
+            this.getEchartsData('airHumidity')
+            break
+          case 2 :
+            this.getEchartsData('CO2')
+            break
+          case 3 :
+            this.getEchartsData('illuminance')
+            break
+          case 4 :
+            this.getEchartsData('soilTemperature')
+            break
+          case 5 :
+            this.getEchartsData('soilHumidity')
+            break
+          case 6 :
+            this.getEchartsData('soilpH')
+            break
+        }
       },
 
       // 获取图表数据的接口
-      getEchartsData:()=>{
-
+      getEchartsData: function (type) {
+        axios.get('/api/device/get_data_in_chart', {
+          params: {
+            id: 504626770,
+            type: type
+          },
+          withCredentials: false
+        }).then((res) => {
+          console.log(res.data.data)
+          let data = res.data.data
+        })
       },
 
       // 获取按钮数据的接口
-      getButtonData:()=>{
+      getButtonData: function () {
         axios.get('/api/device/get_latest_data', {
           params: {
-            id:504626770
+            id: 504626770
           },
           withCredentials: false
-        }).then((res)=>{
+        }).then((res) => {
           console.log(res.data.data)
+          let data = res.data.data
+          this.buttonData[0].data = data.airTemperature
+          this.buttonData[1].data = data.airHumidity
+          this.buttonData[2].data = data.CO2
+          this.buttonData[3].data = data.illuminance
+          this.buttonData[4].data = data.soilTemperature
+          this.buttonData[5].data = data.soilHumidity
+          this.buttonData[6].data = data.soilpH
         })
       }
     }
@@ -104,11 +143,12 @@
 </script>
 
 <style scoped>
-  .console{
+  .console {
     height: 100vh;
     width: 100vw;
   }
-  .echarts-box{
+
+  .echarts-box {
     width: 100vw;
     display: flex;
     justify-content: space-between;
@@ -116,18 +156,21 @@
     position: relative;
     align-items: center;
   }
-  .echarts-img{
+
+  .echarts-img {
     height: 31vh;
     width: 21vw;
   }
-  .echarts-window{
+
+  .echarts-window {
     height: 49vh;
     width: 51vw;
     background: url("./../../static/3.png");
     overflow: auto;
     background-size: 100% 100%;
   }
-  .nav{
+
+  .nav {
     display: flex;
     justify-content: space-between;
     position: relative;
@@ -135,7 +178,8 @@
     margin: 0 12vw;
     color: #ffffff;
   }
-  .nav-item{
+
+  .nav-item {
     height: 9vw;
     width: 9vw;
     background: url("./../../static/1.png");
@@ -143,7 +187,8 @@
     position: relative;
     cursor: pointer;
   }
-  .nav-item-checked{
+
+  .nav-item-checked {
     height: 9vw;
     width: 9vw;
     background: url("./../../static/2.png");
@@ -152,14 +197,16 @@
     position: relative;
     cursor: pointer;
   }
-  .nav-title{
+
+  .nav-title {
     font-size: 0.8vw;
     position: absolute;
     transform: translateX(-50%);
     left: 50%;
     top: 2.7vw;
   }
-  .nav-data{
+
+  .nav-data {
     font-size: 1.5vw;
     position: absolute;
     transform: translateX(-50%);
@@ -167,7 +214,8 @@
     text-align: center;
     top: 4.3vw;
   }
-  .nav-unit{
+
+  .nav-unit {
     font-size: 0.6vw;
   }
 </style>
