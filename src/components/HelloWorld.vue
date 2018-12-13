@@ -73,7 +73,10 @@
     },
     mounted() {
       this.getButtonData()
-      this.getEchartsData('airTemperature')
+      setTimeout(() => {
+        this.getEchartsData('airTemperature')
+      }, 120000)
+
     },
     methods: {
       // 点击切换按钮
@@ -164,11 +167,11 @@
             },
             yAxis: {
               type: 'value',
-              name: '('+this.buttonData[this.checkedButton].unit+')',
-              nameGap:20,
-              nameTextStyle:{
+              name: '(' + this.buttonData[this.checkedButton].unit + ')',
+              nameGap: 20,
+              nameTextStyle: {
                 color: '#a5aabc',
-                left:30
+                left: 30
               },
               axisLabel: {
                 color: '#a5aabc',
@@ -212,7 +215,8 @@
                     label: {show: true, position: 'left', formatter: 'aaa'}
                   },
                   data: [
-                    { yAxis: data.mean,
+                    {
+                      yAxis: data.mean,
                       label: {
                         show: true,
                         color: '#ff4242'
