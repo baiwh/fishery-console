@@ -73,8 +73,9 @@
     },
     mounted() {
       this.getButtonData()
+      this.getEchartsData('airTemperature')
       setTimeout(() => {
-        this.getEchartsData('airTemperature')
+        this.getButtonData()
       }, 120000)
 
     },
